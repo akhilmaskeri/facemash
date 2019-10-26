@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+
+    db:
+        image: mongo
+        expose:
+            - "27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: admin123
+    
+    web-app:
+        build: ./code
+        restart: always
+        depends_on: 
+            - db
+        links:
+            - db
+        ports:
+            - "5000:5000"
