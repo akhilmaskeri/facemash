@@ -2,6 +2,15 @@ version: '3.7'
 
 services:
 
+    web-app:
+        build: ./code
+        depends_on:
+            - db
+        links:
+            - db
+        ports:
+            - "5000:5000"
+
     db:
         image: mongo
         expose:
@@ -9,13 +18,8 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: admin123
-    
-    web-app:
-        build: ./code
-        restart: always
-        depends_on: 
-            - db
-        links:
-            - db
+
+        volumes:
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         ports:
-            - "5000:5000"
+            - '27017:27017'

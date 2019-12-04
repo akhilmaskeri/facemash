@@ -1,7 +1,5 @@
 var app = angular.module('facemash',[]);
 
-
-
 app.controller('panelController',['$scope','$http',function panelController($scope,$http){
 
     $scope.image = {};
