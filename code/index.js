@@ -5,18 +5,24 @@ const generateRandom = require('random-number');
 const morgan = require('morgan')
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://user:admin123@facemash_db_1:27017/test"
+
+var url = "mongodb://user:admin123@172.19.0.2:27017/test"
 var db = null
 
-MongoClient.connect(url, function(err, mongodb_obj){
+MongoClient.connect(url, (err, mongodb_obj) => {
 
-    db = mongodb_obj
+	if(err) throw err;
+
+	db = mongodb_obj.db("test");
+
 	if(db){
-		console.log("**** connected to DB ******");
+		console.log("**** connected to DB ******");	
 	}
-    else{
-        console.log("**** unable to connect to db ****");
-    }
+	else{
+		console.log("**** unable to connect to db ****");
+		console.log(err);
+	}
+
 });
 
 var app = express()
@@ -35,6 +41,8 @@ app.get('/', (req, res)=>{
 });
 
 app.get('/init',(req,res)=>{
+
+	console.log("hits", db);
 
 	var row = db.collection('hits').find({id:1});
 	
@@ -142,6 +150,8 @@ app.get('/hit', (req, res)=>{
 // get the rankings
 app.get('/ranking', function(req, res){
 	
+	console.log("hits", db);
+
 	var ordered = {};
 
 	var faces = db.collection('faces').find();
