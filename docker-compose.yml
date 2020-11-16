@@ -1,14 +1,27 @@
 version: '3.7'
 
 services:
-    web_app:
-        build: ./code
+
+    frontend:
+        build: ./frontend
+        depends_on:
+            - db
+            - backend
+        links:
+            - backend
+        ports:
+            - "3000:3000"
+        environment:
+            WAIT_HOSTS: db:27017
+
+    backend:
+        build: ./backend
         depends_on:
             - db
         links:
             - db
-        ports:
-            - "5000:5000"
+        expose:
+            - 8000
         environment:
             WAIT_HOSTS: db:27017
 

@@ -1,0 +1,39 @@
+.App {
+  text-align: center;
+  color: #666;
+}
+
+.appBody {
+  font-size: calc(2px + 2vmin);
+  color: black;
+  margin: auto;
+  width: 50%;
+}
+
+.img{
+  max-height: 250px;
+  padding: 4px;
+  border: 1px solid #eee;
+}
+
+.img:hover{
+  box-shadow: 1px 1px 5px 2px #00000011;
+}
+
+.imgContainer{
+  float: left;
+  padding: 2vw;
+}
+
+header{
+  background-color: #aa040C;
+  color: #fff;
+  letter-spacing: 2px;
+  padding: 2px;
+}
+
+.footer{
+  background: #eee;
+  box-shadow: 1px 1px 10px 10px #00000022;
+  font-weight: 600;
+}

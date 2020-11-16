@@ -6,7 +6,9 @@ const morgan = require('morgan')
 
 var MongoClient = require('mongodb').MongoClient;
 
-var url = "mongodb://user:admin123@172.19.0.2:27017/test"
+var url = "mongodb://user:admin123@db:27017/test"
+//var url = "mongodb://user:admin123@localhost:27017/test"
+
 var db = null
 
 MongoClient.connect(url, (err, mongodb_obj) => {
@@ -27,18 +29,18 @@ MongoClient.connect(url, (err, mongodb_obj) => {
 
 var app = express()
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'src/views'));
 
 app.use(morgan('tiny'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname, 'src/public')));
 
-// render index
-app.get('/', (req, res)=>{
-	res.render('index')
-});
+// // render index
+// app.get('/', (req, res)=>{
+// 	res.render('index')
+// });
 
 app.get('/init',(req,res)=>{
 
@@ -186,4 +188,4 @@ app.get('/resetCounts', (req, res)=>{
 	});
 });
 
-app.listen(5000);
+app.listen(8000);

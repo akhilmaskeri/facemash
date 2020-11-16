@@ -13,7 +13,6 @@ var init_data = [
         {"name":"Arielle_Kebbel","rating":0},
         {"name":"Irena_Ponaroshku","rating":0},
         {"name":"Karen_Gillan","rating":0},
-        {"name":"Katy_B","rating":0},
         {"name":"Rose_Mciver","rating":0},
         {"name":"Scarlett_Jhonsson","rating":0},
         {"name":"Shruthi_Hassan","rating":0},
