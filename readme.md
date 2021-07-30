@@ -1,3 +1,9 @@
 # facemash
 
-Were we let in for our looks? No. Will we be judged on them? Yes.
+The website is inspired from social-network movie
+
+```
+git clone https://github.com/akhilmaskeri/facemash.git
+cd facemash/
+docker-compose up 
+```
