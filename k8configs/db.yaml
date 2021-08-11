@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: facemash-db
+spec:
+  serviceName: database-service
+  selector:
+    matchLabels:
+      app: facemash-db
+  template:
+    metadata:
+      labels:
+        app: facemash-db
+    spec:
+      containers:
+      - name: facemash-db
+        image: vitaminc3/facemash-db:0.0.1
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: admin123
+        volumeMounts:
+          - mountPath: /docker-entrypoint-initdb.d
+            name: mongo-initdb-script
+        ports:
+          - containerPort: 27017
+      volumes:
+        - name: mongo-initdb-script
+          configMap:
+            name: mongo-initdb-script
+            items:
+            - key: initdb-script.js
+              path: initdb-script.js
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  labels:
+    app: facemash-db
+spec:
+  clusterIP: None
+  selector:
+    app: facemash-db
+  ports:
+    - port: 27017

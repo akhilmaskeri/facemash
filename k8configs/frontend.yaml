@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: facemash-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: facemash-frontend
+  template:
+    metadata:
+      labels:
+        app: facemash-frontend
+    spec:
+      containers:
+      - name: facemash-frontend
+        image: vitaminc3/facemash-frontend:0.0.4
+        env:
+        - name: BACKEND
+          value: facemash-backend-service
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: facemash-frontend-service
+spec:
+  selector:
+    app: facemash-frontend
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+    nodePort: 30001

@@ -12,9 +12,11 @@ services:
         ports:
             - "3000:3000"
         environment:
+            BACKEND: backend
             WAIT_HOSTS: db:27017
 
     backend:
+        container_name: backend
         build: ./backend
         depends_on:
             - db
@@ -23,10 +25,15 @@ services:
         expose:
             - 8000
         environment:
-            WAIT_HOSTS: db:27017
+            DB_USERNAME: user
+            DB_PASSWORD: admin123
+            DB_HOST: facemash_db
+            DB_DATABASE: test
+            PORT: 8000
+            WAIT_HOSTS: facemash_db:27017
 
     db:
-        container_name: db
+        container_name: facemash_db
         build: ./mongodb
         environment:
             MONGO_INITDB_ROOT_USERNAME: root

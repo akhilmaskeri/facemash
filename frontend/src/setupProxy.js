@@ -1,18 +1,12 @@
 const proxy = require('http-proxy-middleware');
-
-module.exports = function(app) {
-  app.use(proxy('/init', { target: 'http://localhost:8000/' }));
-  
-};
-
-
+const BACKEND = process.env.BACKEND
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   app.use(
     '/init',
     createProxyMiddleware({
-      target: 'http://backend:8000',
+      target: `http://${BACKEND}:8000`,
       changeOrigin: true,
     })
   );
@@ -20,7 +14,7 @@ module.exports = function(app) {
   app.use(
     '/imgs*',
     createProxyMiddleware({
-      target: "http://backend:8000",
+      target: `http://${BACKEND}:8000`,
       changeOrigin: true,
     })
   );
@@ -28,7 +22,7 @@ module.exports = function(app) {
   app.use(
     '/hit*',
     createProxyMiddleware({
-      target: "http://backend:8000",
+      target: `http://${BACKEND}:8000`,
       changeOrigin: true,
     })
   );
@@ -36,7 +30,7 @@ module.exports = function(app) {
   app.use(
     '/ranking*',
     createProxyMiddleware({
-      target: "http://backend:8000",
+      target: `http://${BACKEND}:8000`,
       changeOrigin: true,
     })
   )

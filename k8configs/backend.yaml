@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: facemash-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: facemash-backend
+  template:
+    metadata:
+      labels:
+        app: facemash-backend
+    spec:
+      containers:
+      - name: facemash-backend
+        image: vitaminc3/facemash-backend:0.0.4
+        env:
+        - name: DB_USERNAME
+          value: user
+        - name: DB_PASSWORD
+          value: admin123
+        - name: DB_DATABASE
+          value: test
+        - name: PORT
+          value: "8000"
+        - name: DB_HOST
+          value: database-service
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: facemash-backend-service
+spec:
+  selector:
+    app: facemash-backend
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+    nodePort: 30002
+

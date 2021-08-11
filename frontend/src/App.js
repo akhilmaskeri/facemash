@@ -37,7 +37,7 @@ class App extends React.Component {
 
     let context = element.target.id;
     let opposite = (context === "left")? "right": "left";
-
+    
     let url = "/hit?l=" + this.state.left.name + "&r=" + this.state.right.name + "&f=" + this.state[context].name;
     
     console.log(url);

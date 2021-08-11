@@ -6,18 +6,23 @@ const morgan = require('morgan')
 
 var MongoClient = require('mongodb').MongoClient;
 
-var url = "mongodb://user:admin123@db:27017/test"
-//var url = "mongodb://user:admin123@localhost:27017/test"
+const DB_USERNAME = process.env.DB_USERNAME
+const DB_PASSWORD = process.env.DB_PASSWORD
+const DB_HOST     = process.env.DB_HOST
+const DB_DATABASE = process.env.DB_DATABASE
 
+const PORT = process.env.PORT
+
+var url = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_DATABASE}`
 var db = null
 
-MongoClient.connect(url, (err, mongodb_obj) => {
+MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, mongodb_obj) => {
 
 	if(err) throw err;
 
-	db = mongodb_obj.db("test");
+	db = mongodb_obj.db(DB_DATABASE);
 
-	if(db){
+	if(db){ 
 		console.log("**** connected to DB ******");	
 	}
 	else{
@@ -29,20 +34,12 @@ MongoClient.connect(url, (err, mongodb_obj) => {
 
 var app = express()
 
-// app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, 'src/views'));
-
 app.use(morgan('tiny'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname, 'src/public')));
 
-// // render index
-// app.get('/', (req, res)=>{
-// 	res.render('index')
-// });
-
-app.get('/init',(req,res)=>{
+app.get('/init', (req, res)=>{
 
 	console.log("hits", db);
 
@@ -86,20 +83,21 @@ app.get('/init',(req,res)=>{
 
 
 // calculate popularity
-app.get('/hit', (req, res)=>{
+app.get('/hit', (req, res) => {
 
 	var row = db.collection('hits').find({id:1});
 	
-	row.toArray().then((r)=>{
+	row.toArray().then((r) => {
 		let totalCount = (r[0].count) ? r[0].count+1 : 1;
 		db.collection('hits').update({id:1},{$set:{time:Date.now(),count:totalCount}});
-
 		console.log('***** hits updated *******')
-
 	});
 
 	let A = req.query.l;
 	let B = req.query.r;
+
+	console.log(A)
+	console.log(B)
 
 	let SA = (req.query.f == A )?1:0;  // f : finalImage
 	let SB = 1-SA;                     // SA ,  SB 
@@ -188,4 +186,4 @@ app.get('/resetCounts', (req, res)=>{
 	});
 });
 
-app.listen(8000);
+app.listen(PORT);
