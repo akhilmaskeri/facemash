@@ -18,15 +18,24 @@ spec:
         image: vitaminc3/facemash-backend:0.0.4
         env:
         - name: DB_USERNAME
-          value: user
+          valueFrom:
+            secretKeyRef:
+              name: database-credentials
+              key: username
         - name: DB_PASSWORD
-          value: admin123
+          valueFrom:
+            secretKeyRef:
+              name: database-credentials
+              key: password
         - name: DB_DATABASE
           value: test
         - name: PORT
           value: "8000"
         - name: DB_HOST
-          value: database-service
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: database-host
         ports:
         - containerPort: 8000
 ---
