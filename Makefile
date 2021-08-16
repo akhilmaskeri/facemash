@@ -18,6 +18,6 @@ apply:
 	kubectl apply -f k8configs/config-map.yaml
 	kubectl apply -f k8configs/db.yaml
 	kubectl apply -f k8configs/frontend.yaml
-	@echo "Sleeping for 5 seconds"
-	sleep 5
 	kubectl apply -f k8configs/backend.yaml
+
+

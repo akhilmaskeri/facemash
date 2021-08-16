@@ -1,4 +1,4 @@
-
+// create user
 db.createUser({
     user: "user",
     pwd: "admin123",
@@ -8,6 +8,15 @@ db.createUser({
     }]
 })
 
+// create hits collection
+db.hits.insert({'id':1,'count':0}, (err, res)=>{
+    if (err) throw err;
+    console.log("reset hit")
+    db.close();
+});
+
+
+// create faces collection
 var init_data = [
         {"name":"Amy_Adams","rating":0},
         {"name":"Arielle_Kebbel","rating":0},
@@ -23,10 +32,3 @@ db.faces.insert(init_data,(err, res)=>{
     if (err) throw err;
     console.log("Number of documents inerted : ", res.insertedCount);
 });
-
-db.hits.insert({'id':1,'count':0}, (err, res)=>{
-    if (err) throw err;
-    console.log("reset hit")
-    db.close();
-});
-

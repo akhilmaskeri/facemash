@@ -15,7 +15,9 @@ spec:
     spec:
       containers:
       - name: facemash-backend
-        image: vitaminc3/facemash-backend:0.0.4
+        image: vitaminc3/facemash-backend:0.0.5
+        ports:
+        - containerPort: 8000
         env:
         - name: DB_USERNAME
           valueFrom:
@@ -36,8 +38,7 @@ spec:
             configMapKeyRef:
               name: database-config
               key: database-host
-        ports:
-        - containerPort: 8000
+  
 ---
 apiVersion: v1
 kind: Service
