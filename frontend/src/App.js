@@ -68,16 +68,21 @@ class App extends React.Component {
         
 
         <div className="appBody">
-          <div className="imgContainer" >
-            <div>
-              <img className="img" id="left" src={this.state.left.src} alt="left" onClick={this.onHit}/>
-              <p>{this.state.left.name.replace("_", " ")}</p>
+
+          <div className="imagePanel">
+
+            <div className="imgContainer" >
+              <div>
+                <img className="img" id="left" src={this.state.left.src} alt="left" onClick={this.onHit}/>
+                <p>{this.state.left.name.replaceAll("_", " ").split(".")[0]}</p>
+              </div>
             </div>
-          </div>
-          <div className="imgContainer">
-            <div>
-              <img className="img" id="right" src={this.state.right.src} alt="right" onClick={this.onHit}/>
-              <p>{this.state.right.name.replace("_", " ")}</p>
+
+            <div className="imgContainer">          
+              <div>
+                <img className="img" id="right" src={this.state.right.src} alt="right" onClick={this.onHit}/>
+                <p>{this.state.right.name.replaceAll("_", " ").split(".")[0]}</p>
+              </div>
             </div>
           </div>
 

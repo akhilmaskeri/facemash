@@ -17,12 +17,16 @@
 }
 
 .img:hover{
-  box-shadow: 1px 1px 5px 2px #00000011;
+  box-shadow: 1px 1px 5px 2px #00000044;
+}
+
+.imagePanel{
+  display: flex;
+  justify-content: center;
 }
 
 .imgContainer{
-  float: left;
-  padding: 2vw;
+  padding: 50px;
 }
 
 header{

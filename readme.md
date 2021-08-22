@@ -1,7 +1,8 @@
 # facemash
 
-The project is inspired from social-network movie.
+The project is inspired from movie <b>social network</b>.
 
+### install
 ```
     git clone https://github.com/akhilmaskeri/facemash.git && cd facemash
 ```
@@ -19,3 +20,9 @@ or run with kubernetes
 	kubectl apply -f k8configs/frontend.yaml
 	kubectl apply -f k8configs/backend.yaml
 ```
+
+### mischief
+make your own facemash by adding images to `imgs/`
+- image names should not contain special characters other than `_`
+- while building infr, `_` gets replaced by empty space
+

@@ -41,8 +41,8 @@ class Panel extends React.Component {
         for(let i=0; i< this.state.rankings.length; i++){
             members.push( 
                 <li className="rankItem">
-                    <img className="thumbnail" src={"/imgs/" + this.state.rankings[i].name + ".jpg"} />
-                    <p>{this.state.rankings[i].name.replace("_", " ")}</p>
+                    <img className="thumbnail" src={"/facemash/" + this.state.rankings[i].name} />
+                    <p>{this.state.rankings[i].name.replace("_", " ").split(".")[0]}</p>
                 </li> 
             )
         }
