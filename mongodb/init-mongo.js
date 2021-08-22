@@ -1,3 +1,4 @@
+
 // create user
 db.createUser({
     user: "user",
@@ -15,18 +16,15 @@ db.hits.insert({'id':1,'count':0}, (err, res)=>{
     db.close();
 });
 
-
-// create faces collection
-var init_data = [
-        {"name":"Amy_Adams","rating":0},
-        {"name":"Arielle_Kebbel","rating":0},
-        {"name":"Irena_Ponaroshku","rating":0},
-        {"name":"Karen_Gillan","rating":0},
-        {"name":"Rose_Mciver","rating":0},
-        {"name":"Scarlett_Jhonsson","rating":0},
-        {"name":"Shruthi_Hassan","rating":0},
-        {"name":"Yvonne_Strahovski","rating":0}
-];
+// read files from imgs and create database
+var init_data = Array()
+files = listFiles("/tmp/imgs");
+files.forEach(image => {
+    init_data.push({
+        "name": image.baseName,
+        "rating": 0
+    });
+});
 
 db.faces.insert(init_data,(err, res)=>{
     if (err) throw err;

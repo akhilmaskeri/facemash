@@ -8,28 +8,70 @@ services:
             - "3000:3000"
         environment:
             BACKEND: backend
+            MINIO_ENDPOINT: minio
             WAIT_HOSTS: db:27017
 
     backend:
         container_name: backend
         build: ./backend
-        expose:
-            - 8000
         environment:
             DB_USERNAME: user
             DB_PASSWORD: admin123
             DB_HOST: facemash_db
             DB_DATABASE: test
             PORT: 8000
+            MINIO_ENDPOINT: minio
+            MINIO_ACCESS_KEY: testkey
+            MINIO_SECRET_KEY: testsecret
             WAIT_HOSTS: facemash_db:27017
-        volumes: 
-            - "./imgs:/app/src/public/imgs:ro"
 
     db:
         container_name: facemash_db
         build: ./mongodb
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: admin123
-        ports:
-            - "27017:27017"
+            MONGO_INITDB_ROOT_PASSWORD: admin123 
+        volumes: 
+            - "./imgs:/tmp/imgs"
+            - "./.mongo:/data/db"
+
+    minio:
+        container_name: minio
+        hostname: minio
+        image: minio/minio:latest
+        command: ["server", "/data"]
+        environment: 
+            MINIO_ROOT_USER: testkey
+            MINIO_ROOT_PASSWORD: testsecret
+        volumes: 
+            - "./.minio:/data"
+    
+    minio_create_initial_bucket:
+        image:  minio/mc
+        depends_on: 
+            - minio
+        volumes: 
+            - "./imgs:/tmp/imgs"
+        entrypoint: >
+            /bin/sh -c "
+
+            sleep 4;
+
+            echo 'adding config';
+            /usr/bin/mc alias set myminio http://minio:9000 testkey testsecret;
+
+            echo 'creating bucket myminio/facemash';
+            /usr/bin/mc mb myminio/facemash;
+
+            sleep 5;
+            /usr/bin/mc stat myminio/facemash;
+
+            echo 'adding images into facemash bucket';
+            for img in $$(ls /tmp/imgs); do
+                /usr/bin/mc cp /tmp/imgs/$$img myminio/facemash
+            done;
+            
+            echo 'getting links to facemash bucket';
+            /usr/bin/mc policy set public myminio/facemash --recursive;
+            exit 0;
+            "

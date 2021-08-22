@@ -2,15 +2,23 @@ const express = require('express')
 const path = require('path')
 const generateRandom = require('random-number');
 const morgan = require('morgan')
+var Minio = require("minio")
 
 var MongoClient = require('mongodb').MongoClient;
+const { response } = require('express');
 
 const DB_USERNAME = process.env.DB_USERNAME
 const DB_PASSWORD = process.env.DB_PASSWORD
 const DB_HOST     = process.env.DB_HOST
 const DB_DATABASE = process.env.DB_DATABASE
+const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT
+const MINIO_ACCESSKEY = process.env.MINIO_ACCESS_KEY
+const MINIO_SECRETKEY = process.env.MINIO_SECRET_KEY
 
 const PORT = process.env.PORT
+
+
+console.log(MINIO_ENDPOINT, MINIO_ACCESSKEY, MINIO_SECRETKEY)
 
 var app = express()
 app.use(morgan('tiny'));
@@ -37,6 +45,14 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err
 	}
 });
 
+// connect to minio
+var minioClient = new Minio.Client({
+	endPoint: MINIO_ENDPOINT,
+	port: 9000,
+	useSSL: false,
+	accessKey: MINIO_ACCESSKEY,
+	secretKey: MINIO_SECRETKEY
+});
 
 // updates hits count
 function update_hits() {
@@ -47,7 +63,7 @@ function update_hits() {
 	row.toArray().then((r)=>{
 		// update 
 		let totalCount = (r[0].count) ? r[0].count+1 : 1;
-		hits.update({id:1},{
+		hits.updateOne({id:1},{
 			$set:{
 				time : Date.now(),
 				count : totalCount}
@@ -80,10 +96,14 @@ app.get('/init', (req, res)=>{
 		var img1 = f[r1];
 		var img2 = f[r2];
 
+		let img1_url = "/facemash/" + img1.name;
+		let img2_url = "/facemash/" + img2.name;
+
 		res.json({
-			left : { name: img1.name , src: "/imgs/"+img1.name+".jpg" },
-			right: { name: img2.name , src: "/imgs/"+img2.name+".jpg" }
+			left : { name: img1.name , src: img1_url },
+			right: { name: img2.name , src: img2_url }
 		});
+		
 	});
 
 });
@@ -94,35 +114,40 @@ app.get('/hit', (req, res) => {
 
 	update_hits();
 
-	let A = req.query.l;
-	let B = req.query.r;
+	var A = req.query.l;
+	var B = req.query.r;
 
 	console.log(`left:${A}`, `right:${B}`)
 
 	// f -> selected Image
 	// SA ,  SB 
-	let SA = (req.query.f == A ) ? 1: 0;
-	let SB = 1-SA;
+	var SA = (req.query.f == A ) ? 1 : 0;
+	var SB = 1-SA;
 
-	let RA = 0;
-	let RB = 0;
+	console.log(`SA:${SA} SB:${SB}`)
 
 	faces = db.collection("faces");
 
 	faces.findOne({name: A}, (err, left) => {
 		
-		RA = left.rating; // rating of A
+		console.log(left);
+		var RA = left.rating; // rating of A
 
 		faces.find({name: B}, (err, right) => {
 			
-			RB =  right.rating; // rating of B
+			console.log(right);
+			var RB =  right.rating; // rating of B
 			
-			EA = 1 / (1 + Math.pow(10, (RB-RA)/400));
-			EB = 1 / (1 + Math.pow(10, (RA-RB)/400));
+			console.log(`RA:${RA} RB:${RB}`)
 
-			_RA = RA + 24 * ( SA - EA );
-			_RB = RB + 24 * ( SB - EB );
+			let EA = 1 / (1 + Math.pow(10, (RB-RA)/400));
+			let EB = 1 / (1 + Math.pow(10, (RA-RB)/400));
+			let _RA = RA + 24 * ( SA - EA );
+			let _RB = RB + 24 * ( SB - EB );
 			
+			console.log("updating : ", A, ":", _RA );
+			console.log("updating : ", B, ":", _RB );
+
 			faces.updateOne({name:A}, {$set:{rating:_RA} });
 			faces.updateOne({name:B}, {$set:{rating:_RB} });
 
@@ -141,7 +166,9 @@ app.get('/hit', (req, res) => {
 				}
 
 				let img = f[r];
-				res.json({ image : { name: img.name ,  src: `/imgs/${img.name}.jpg` } })
+				let img_url = "/facemash/" + img.name;
+				res.json({ image : { name: img.name ,  src: img_url } })
+
 			})
 
 		});
@@ -157,6 +184,7 @@ app.get('/ranking', function(req, res){
 	var ordered = {};
 
 	var faces = db.collection('faces').find();
+
 	faces.toArray().then(function(result){
 
 		result.sort(function(a, b){
@@ -185,7 +213,7 @@ app.get('/counts', (req, res)=>{
 app.get('/resetCounts', (req, res)=>{
 	var hits = db.collection('hits').find({id:1});
 	hits.then((err, r)=>{
-		db.hits.update({id:1}, {$set:{time:null, count:0}});
+		db.hits.updateOne({id:1}, {$set:{time:null, count:0}});
 		res.send('ok');
 	});
 });

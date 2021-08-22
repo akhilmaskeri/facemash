@@ -1,5 +1,5 @@
 
-delete:
+kubedelete:
 	@echo "----------- deleting -----------"
 	kubectl delete \
 		service/database-service \
@@ -12,7 +12,7 @@ delete:
 		configmap/mongo-initdb-script \
 		configmap/database-config
 
-apply:
+kubeapply:
 	@echo "------------ applying ------------"
 	kubectl apply -f k8configs/secrets.yaml
 	kubectl apply -f k8configs/config-map.yaml
