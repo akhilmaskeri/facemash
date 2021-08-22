@@ -31,13 +31,9 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: admin123 
-            PUID: 1000
-            PGID: 1000
         volumes: 
             - "./imgs:/tmp/imgs"
             - "./.mongo:/data/db"
-        entrypoint: ["mongod"]
-        restart: always
 
     minio:
         container_name: minio
