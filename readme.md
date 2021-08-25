@@ -15,10 +15,10 @@ run it with docker compose
 or run with kubernetes
 ```
     kubectl apply -f k8configs/secrets.yaml
-	kubectl apply -f k8configs/config-map.yaml
-	kubectl apply -f k8configs/db.yaml
-	kubectl apply -f k8configs/frontend.yaml
-	kubectl apply -f k8configs/backend.yaml
+    kubectl apply -f k8configs/config-map.yaml
+    kubectl apply -f k8configs/db.yaml
+    kubectl apply -f k8configs/frontend.yaml
+    kubectl apply -f k8configs/backend.yaml
 ```
 
 ### mischief
