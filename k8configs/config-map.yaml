@@ -12,11 +12,13 @@ metadata:
   name: mongo-initdb-script
 data:
   initdb-script.js: |
-    db.getSiblingDB('test');
     db.createUser({
         user: "user",
         pwd: "admin123",
-        roles: ["readWrite"]
+        roles: [{
+          role: "readWrite",
+          db: "test"
+        }]
     });
     
 ---

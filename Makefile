@@ -17,11 +17,10 @@ run:
 
 sync-data:
 	@echo "============= sync data ============="
-	# docker build -t sync-data-minio src/sync-data/minio/ 
-	# docker run --rm -it --network="host" --volume $(LOCAL_IMG_FOLDER):/data sync-data-minio python /app/script.py
+	docker build -t sync-data-minio src/sync-data/minio/ 
+	docker run --rm -it --network="host" --volume $(LOCAL_IMG_FOLDER):/data sync-data-minio python /app/script.py
 
-	docker build -t sync-data-mongo src/sync-data/mongo/ 
-	docker run --rm -it --network="host" --volume $(LOCAL_IMG_FOLDER):/data sync-data-mongo python /app/script.py
+	python3 src/sync-data/mongo/script.py
 
 remove:
 	@echo "============= Removing ============="
