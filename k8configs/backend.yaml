@@ -14,31 +14,40 @@ spec:
         app: facemash-backend
     spec:
       containers:
-      - name: facemash-backend
-        image: vitaminc3/facemash-backend:0.0.5
-        ports:
-        - containerPort: 8000
-        env:
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: username
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: database-credentials
-              key: password
-        - name: DB_DATABASE
-          value: test
-        - name: PORT
-          value: "8000"
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: database-config
-              key: database-host
-  
+        - name: facemash-backend
+          image: vitaminc3/facemash_backend:0.0.2
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: password
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: database-config
+                  key: database-host
+            - name: DB_DATABASE
+              value: test
+            - name: PORT
+              value: "8000"
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: minio-config
+                  key: minio-host
+            - name: MINIO_ACCESS_KEY
+              value: testkey
+            - name: MINIO_SECRET_KEY
+              value: testsecret
+    
 ---
 apiVersion: v1
 kind: Service

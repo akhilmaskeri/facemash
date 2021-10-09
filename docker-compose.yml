@@ -1,9 +1,8 @@
 version: '3.7'
 
 services:
-
     frontend:
-        build: ./frontend
+        build: ./src/frontend
         ports:
             - "3000:3000"
         environment:
@@ -13,7 +12,7 @@ services:
 
     backend:
         container_name: backend
-        build: ./backend
+        build: ./src/backend
         environment:
             DB_USERNAME: user
             DB_PASSWORD: admin123
@@ -24,15 +23,18 @@ services:
             MINIO_ACCESS_KEY: testkey
             MINIO_SECRET_KEY: testsecret
             WAIT_HOSTS: facemash_db:27017
+        ports:
+            - "8000:8000"
 
     db:
         container_name: facemash_db
-        build: ./mongodb
+        build: ./src/mongodb
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: admin123 
+        ports:
+            - "27017:27017"
         volumes: 
-            - "./imgs:/tmp/imgs"
             - "./.mongo:/data/db"
 
     minio:
@@ -43,6 +45,9 @@ services:
         environment: 
             MINIO_ROOT_USER: testkey
             MINIO_ROOT_PASSWORD: testsecret
+        ports:
+            - "9000:9000"
+            - "9091:9091"
         volumes: 
             - "./.minio:/data"
     

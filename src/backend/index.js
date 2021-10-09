@@ -2,7 +2,6 @@ const express = require('express')
 const path = require('path')
 const generateRandom = require('random-number');
 const morgan = require('morgan')
-var Minio = require("minio")
 
 var MongoClient = require('mongodb').MongoClient;
 const { response } = require('express');
@@ -19,6 +18,7 @@ const PORT = process.env.PORT
 
 
 console.log(MINIO_ENDPOINT, MINIO_ACCESSKEY, MINIO_SECRETKEY)
+console.log(DB_HOST, DB_USERNAME, DB_PASSWORD)
 
 var app = express()
 app.use(morgan('tiny'));
@@ -43,15 +43,6 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err
 		console.log("****** unable to connect to db ******");
 		console.log(err);
 	}
-});
-
-// connect to minio
-var minioClient = new Minio.Client({
-	endPoint: MINIO_ENDPOINT,
-	port: 9000,
-	useSSL: false,
-	accessKey: MINIO_ACCESSKEY,
-	secretKey: MINIO_SECRETKEY
 });
 
 // updates hits count

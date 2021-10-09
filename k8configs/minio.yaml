@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: facemash-minio
+spec:
+  selector:
+    matchLabels:
+      app: facemash-minio
+  template:
+    metadata:
+      labels:
+        app: facemash-minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          args: 
+            - "server" 
+            - "--console-address"
+            - ":9001"
+            - "/data"
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: testkey
+            - name: MINIO_SECRET_KEY
+              value: testsecret
+          ports:
+            - containerPort: 9000
+              hostPort: 9000
+            - containerPort: 9001
+              hostPort: 9001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+spec:
+  selector:
+    app: facemash-minio
+  type: LoadBalancer
+  ports:
+    - name: "address"
+      port: 9000
+      targetPort: 9000
+      nodePort: 30003
+      protocol: TCP
+    - name: "console-address"
+      port: 9001
+      targetPort: 9001
+      nodePort: 30004
+      protocol: TCP

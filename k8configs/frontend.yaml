@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: facemash-frontend
-        image: vitaminc3/facemash-frontend:0.0.4
+        image: vitaminc3/facemash_frontend:0.0.1
         env:
         - name: BACKEND
           value: facemash-backend-service

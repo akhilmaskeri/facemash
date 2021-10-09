@@ -1,23 +1,33 @@
+BASE_PATH:=$(shell pwd)
 
-kubedelete:
-	@echo "----------- deleting -----------"
-	kubectl delete \
-		service/database-service \
-		service/facemash-backend-service \
-		service/facemash-frontend-service \
-		deployment/facemash-backend \
-		deployment/facemash-frontend \
-		statefulset/facemash-db \
-		secrets/database-credentials \
-		configmap/mongo-initdb-script \
-		configmap/database-config
+LOCAL_CONFIG_FOLDER:=$(BASE_PATH)/k8configs
+LOCAL_IMG_FOLDER:=$(BASE_PATH)/imgs
 
-kubeapply:
-	@echo "------------ applying ------------"
-	kubectl apply -f k8configs/secrets.yaml
-	kubectl apply -f k8configs/config-map.yaml
-	kubectl apply -f k8configs/db.yaml
-	kubectl apply -f k8configs/frontend.yaml
-	kubectl apply -f k8configs/backend.yaml
+MONGO_USERNAME="root"
+MONGO_PASSOWRD="admin123"
 
+run:
+	@echo "============= kube apply ============="
+	kubectl apply -f $(LOCAL_CONFIG_FOLDER)/config-map.yaml \
+				  -f $(LOCAL_CONFIG_FOLDER)/secrets.yaml \
+				  -f $(LOCAL_CONFIG_FOLDER)/db.yaml \
+				  -f $(LOCAL_CONFIG_FOLDER)/minio.yaml \
+				  -f $(LOCAL_CONFIG_FOLDER)/backend.yaml \
+				  -f $(LOCAL_CONFIG_FOLDER)/frontend.yaml
 
+sync-data:
+	@echo "============= sync data ============="
+	# docker build -t sync-data-minio src/sync-data/minio/ 
+	# docker run --rm -it --network="host" --volume $(LOCAL_IMG_FOLDER):/data sync-data-minio python /app/script.py
+
+	docker build -t sync-data-mongo src/sync-data/mongo/ 
+	docker run --rm -it --network="host" --volume $(LOCAL_IMG_FOLDER):/data sync-data-mongo python /app/script.py
+
+remove:
+	@echo "============= Removing ============="
+	kubectl get svc | awk '(NR>1){print "svc/"$$1}' | xargs kubectl delete
+	kubectl get deployments | awk '(NR>1){print "deployments/"$$1}' | xargs kubectl delete
+	kubectl get secrets | awk '(NR>1){print "secrets/"$$1}' | xargs kubectl delete
+	kubectl get configmap | awk '(NR>1){print "configmap/"$$1}' | xargs kubectl delete
+	kubectl get statefulset | awk '(NR>1){print "statefulset/"$$1}' | xargs kubectl delete
+	
