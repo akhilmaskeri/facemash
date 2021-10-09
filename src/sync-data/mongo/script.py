@@ -1,20 +1,20 @@
 import os
 from pymongo import MongoClient
 
-INIT_USER = "root"
-INIT_PASSWORD = "admin123"
-MONGO_HOST = "localhost"
+DB_HOST = "localhost"
 MONGO_PORT = "27017"
 
-DB_USER = "user"
+DB_USERNAME = "root"
 DB_PASSWORD = "admin123"
-DATABASE_NAME = "test"
 
-CONNECTION_URL = f"mongodb://{INIT_USER}:{INIT_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}"
+DB_DATABASE = "test"
 
+CONNECTION_URL = f"mongodb://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{MONGO_PORT}"
+print(CONNECTION_URL)
 # connect to database
 client = MongoClient(CONNECTION_URL)
-db = client[DATABASE_NAME]
+# print(client.server_info())
+db = client[DB_DATABASE]
 
 # create collections
 if not db.get_collection("hist"):

@@ -1,4 +1,5 @@
 import os
+import json
 from minio import Minio
 
 MINIO_URL = "localhost:9000"
@@ -22,6 +23,17 @@ for image_file_name in mounted_files:
     print(f"uploading : {image_file_name}")
     client.fput_object(
         "facemash", 
-        ".".join(image_file_name.split(".")[0:-1]), 
+        image_file_name, 
         os.path.join(MOUNTED_FILE_PATH, image_file_name)
     )
+
+client.set_bucket_policy("facemash", json.dumps({
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal":{"AWS":"*"},
+        "Action": "s3:GetObject",
+        "Resource": "arn:aws:s3:::facemash/*"
+    }]
+}))

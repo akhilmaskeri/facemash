@@ -18,6 +18,8 @@ spec:
         env:
         - name: BACKEND
           value: facemash-backend-service
+        - name: MINIO_ENDPOINT
+          value: minio-service
         ports:
         - containerPort: 3000
 ---
