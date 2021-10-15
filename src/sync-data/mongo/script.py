@@ -1,21 +1,22 @@
 import os
-import pip
-pip.main(["install", "pymongo"])
-
+import sys
 from pymongo import MongoClient
+
+path = sys.argv[1]
 
 DB_HOST = "localhost"
 MONGO_PORT = "27017"
 
-DB_USERNAME = "user"
+DB_USERNAME = "root"
 DB_PASSWORD = "admin123"
 
 DB_DATABASE = "test"
 
-CONNECTION_URL = f"mongodb://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{MONGO_PORT}/{DB_DATABASE}"
+CONNECTION_URL = f"mongodb://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{MONGO_PORT}"
 print(CONNECTION_URL)
 # connect to database
 client = MongoClient(CONNECTION_URL)
+
 db = client[DB_DATABASE]
 
 # create collections
@@ -23,7 +24,7 @@ if not db.get_collection("hist"): db.create_collection("hits")
 if not db.get_collection("faces"): db.create_collection("faces")
 
 # add data to database
-mounted_files = os.listdir("imgs")
+mounted_files = os.listdir(path)
 faces = db.get_collection("faces")
 data = []
 

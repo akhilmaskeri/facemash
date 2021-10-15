@@ -1,9 +1,8 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: facemash-db
 spec:
-  serviceName: database-service
   selector:
     matchLabels:
       app: facemash-db
