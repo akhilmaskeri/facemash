@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,11 +11,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mongo-initdb-script
-data:
+data: 
   initdb-script.js: |
     db.createUser({
-        user: "user",
-        pwd: "admin123",
+        user: "{{ .Values.database.username }}",
+        pwd: "{{ .Values.database.password }}",
         roles: [{
           role: "readWrite",
           db: "test"
