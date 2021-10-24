@@ -3,8 +3,10 @@ import json
 from minio import Minio
 
 MINIO_URL = "localhost:9000"
-ACCESS_KEY = "testkey"
-SECRET_KEY = "testsecret"
+ACCESS_KEY = os.environ["MINIO_ACCESS_KEY"]
+SECRET_KEY = os.environ["MINIO_SECRET_KEY"]
+
+
 MOUNTED_FILE_PATH = "/data"
 
 client = Minio(

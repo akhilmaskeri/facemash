@@ -4,11 +4,10 @@ from pymongo import MongoClient
 
 path = sys.argv[1]
 
-DB_HOST = "localhost"
+DB_HOST =  os.environ["DB_HOST"]
 MONGO_PORT = "27017"
-
-DB_USERNAME = "root"
-DB_PASSWORD = "admin123"
+DB_USERNAME = os.environ["DB_USERNAME"]
+DB_PASSWORD = os.environ["DB_PASSWORD"]
 
 DB_DATABASE = "test"
 

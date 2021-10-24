@@ -21,9 +21,15 @@ spec:
             - "/data"
           env:
             - name: MINIO_ACCESS_KEY
-              value: testkey
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: minio_access_key
             - name: MINIO_SECRET_KEY
-              value: testsecret
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: minio_secret_key
           ports:
             - containerPort: 9000
               hostPort: 9000
@@ -39,7 +45,7 @@ spec:
     app: facemash-minio
   type: LoadBalancer
   ports:
-    - name: "address"
+    - name: "ui-address"
       port: 9000
       targetPort: 9000
       nodePort: 30003
