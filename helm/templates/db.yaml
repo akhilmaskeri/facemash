@@ -1,11 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: facemash-db
 spec:
   selector:
     matchLabels:
       app: facemash-db
+  serviceName: database-service
+  replicas: 1
   template:
     metadata:
       labels:
@@ -33,10 +35,22 @@ spec:
                   name: database-credentials
                   key: mongo_initdb_root_password
           volumeMounts:
-            - mountPath: /docker-entrypoint-initdb.d/
-              name: mongo-initdb-script
+            - name: mongo-initdb-script
+              mountPath: /docker-entrypoint-initdb.d/
+            - name: mongo-persistant-storage
+              mountPath: /data/db
           ports:
             - containerPort: 27017
+  volumeClaimTemplates:
+    - metadata: 
+        name: mongo-persistant-storage
+      spec: 
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: "{{ .Values.database.storageClassName }}"
+        resources:
+          requests:
+            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service

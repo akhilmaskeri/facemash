@@ -4,6 +4,7 @@ sync-data: sync-mongo sync-minio
 
 install:
 	@echo "============= helm install ============="
+	kubectl create namespace playground
 	helm install facemash -n playground helm
 	@echo "==========================================="
 

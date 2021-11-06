@@ -87,6 +87,7 @@ database:
   password: admin123
   rootUsername: root
   rootPassword: admin123
+  storageClassName: hostpath
 
 minio:
   access_key: accesskey
