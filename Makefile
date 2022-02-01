@@ -23,7 +23,7 @@ sync-mongo:
 	virtualenv mongo-data-sync-virtualenv
 	(\
 		source mongo-data-sync-virtualenv/bin/activate; \
-		pip install pymongo; \
+		pip install pymongo==3.12.3; \
 		export DB_HOST="localhost"; \
 		export DB_USERNAME="${MONGO_USER}"; \
 		export DB_PASSWORD="${MONGO_PASSWORD}"; \
