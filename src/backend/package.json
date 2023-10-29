@@ -10,7 +10,7 @@
   "author": "vitaminC",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^2.6.1",
+    "ejs": "^3.1.7",
     "express": "^4.16.3",
     "express-prom-bundle": "^6.3.6",
     "minio": "^7.1.3",
